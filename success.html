@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HPBD</title>
+
+    <!-- ✅ Font có hỗ trợ đầy đủ tiếng Việt và giữ nét cổ điển -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&family=Great+Vibes&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #f8d9b9;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Be Vietnam Pro", "Georgia", serif;
+        perspective: 1000px;
+        gap: 20px;
+      }
+      h1 {
+        color: #a0522d;
+        font-weight: bold;
+        text-shadow: 1px 1px #fff;
+      }
+
+      /* ----------- PHONG BÌ ----------- */
+      .envelope {
+        position: relative;
+        width: 420px;
+        height: 280px;
+        background: #fdf5e6;
+        border: 4px solid transparent;
+        border-image: repeating-linear-gradient(
+            45deg,
+            #e63946 0 10px,
+            #1d3557 10px 20px
+          )
+          8;
+        transition: all 0.8s ease-in-out;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .flap {
+        position: absolute;
+        width: 100%;
+        height: 50%;
+        top: 0;
+        left: 0;
+        background: #f5deb3;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top;
+        transition: transform 0.8s ease-in-out;
+        z-index: 3;
+      }
+
+      .letter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) translateY(10px) scale(0.9);
+        width: 90%;
+        height: 90%;
+        background: #fffaf0;
+        border-radius: 8px;
+        padding: 25px;
+        text-align: left;
+        opacity: 0;
+        transition: all 1s ease-in-out;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        z-index: 0;
+        overflow-y: auto;
+        animation: sway 4s ease-in-out infinite;
+      }
+
+      /* Hiệu ứng lá thư lay nhẹ */
+      @keyframes sway {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(1.5deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+      }
+
+      .letter p {
+        color: #333;
+        font-size: 17px;
+        line-height: 1.6;
+        white-space: pre-line;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+      }
+
+      .author-signature {
+        align-self: flex-end;
+        margin-top: auto;
+        font-style: italic;
+        font-family: "Great Vibes", cursive;
+        color: #555;
+        font-size: 20px;
+      }
+
+      .letter p .cursor {
+        display: inline-block;
+        background-color: #333;
+        margin-left: 4px;
+        width: 2px;
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          background-color: transparent;
+        }
+        50% {
+          background-color: #333;
+        }
+      }
+
+      .btns {
+        margin-top: 10px;
+      }
+      button {
+        padding: 12px 25px;
+        border: 2px solid #a0522d;
+        background: transparent;
+        color: #a0522d;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        margin: 0 10px;
+        font-size: 16px;
+      }
+      button:hover {
+        background: #a0522d;
+        color: #fff;
+      }
+
+      /* Khi mở thư */
+      .open .flap {
+        transform: rotateX(180deg);
+      }
+      .open .letter {
+        transform: translate(-50%, -50%) translateY(-140px) scale(1.05);
+        opacity: 1;
+        z-index: 4;
+      }
+
+      /* Responsive */
+      @media (max-width: 500px) {
+        .envelope {
+          width: 300px;
+          height: 210px;
+        }
+        .letter p {
+          font-size: 15px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Click "OPEN" để đọc</h1>
+
+    <div class="envelope" id="envelope">
+      <div class="flap"></div>
+      <div class="letter">
+        <p id="letter-text"></p>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="openEnvelope()">OPEN</button>
+      <button onclick="closeEnvelope()">CLOSE</button>
+    </div>
+
+    <script>
+      const envelope = document.getElementById("envelope");
+      const letterTextElement = document.getElementById("letter-text");
+
+      const fullText = `<b>HAPPY BIRTHDAY 🎂</b>
+
+Chúc cậu có một ngày sinh nhật thật ngọt ngào và đáng nhớ. Sang tuổi mới, tớ chúc cậu luôn gặp được những điều tốt lành. Hãy luôn cười thật nhiều nhé, vì nụ cười của cậu xinh lắm đóoo 💖
+
+<span class="author-signature">— Dear Diệu Hạnh</span>`;
+
+      let currentText = "";
+      let i = 0;
+      let typeTimer;
+      const typingSpeed = 70;
+
+      function typeWriter() {
+        if (i < fullText.length) {
+          currentText += fullText.charAt(i);
+          let nextChar = fullText.charAt(i);
+          if (nextChar === "<") {
+            let tagEndIndex = fullText.indexOf(">", i);
+            if (tagEndIndex !== -1) {
+              currentText += fullText.substring(i + 1, tagEndIndex + 1);
+              i = tagEndIndex;
+            }
+          }
+          letterTextElement.innerHTML =
+            currentText + '<span class="cursor">&nbsp;</span>';
+          i++;
+          typeTimer = setTimeout(typeWriter, typingSpeed);
+        } else {
+          letterTextElement.innerHTML = currentText;
+        }
+      }
+
+      function openEnvelope() {
+        if (!envelope.classList.contains("open")) {
+          envelope.classList.add("open");
+          setTimeout(() => {
+            i = 0;
+            currentText = "";
+            clearTimeout(typeTimer);
+            typeWriter();
+          }, 1000);
+        }
+      }
+
+      function closeEnvelope() {
+        envelope.classList.remove("open");
+        clearTimeout(typeTimer);
+      }
+    </script>
+  </body>
+</html>

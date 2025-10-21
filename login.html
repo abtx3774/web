@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        background-color: #f8d9b9;
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .login-box {
+        background-color: #fff;
+        border: 2px solid #f57c73;
+        border-radius: 15px;
+        padding: 20px;
+        width: 280px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-box img {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      input {
+        width: 90%;
+        padding: 10px;
+        border: 1px solid #f57c73;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      button {
+        width: 95%;
+        padding: 10px;
+        border: none;
+        background-color: #f57c73;
+        color: white;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      button:hover {
+        background-color: #ff928a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-box">
+      <img
+        src="https://i.pinimg.com/736x/8a/b6/32/8ab6323cbcd05e1b4f7adaa304a0ae86.jpg"
+        alt="cute bear"
+      />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="checkPassword()">ENTER</button>
+    </div>
+
+    <script>
+      function checkPassword() {
+        const password = document.getElementById("password").value;
+        const correctPassword = "DieuHanh";
+
+        if (password === correctPassword) {
+          window.location.href = "success.html";
+        } else {
+          alert("Sai mật khẩu rồi 🥲");
+        }
+      }
+    </script>
+  </body>
+</html>
